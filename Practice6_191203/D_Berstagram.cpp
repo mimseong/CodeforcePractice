@@ -1,50 +1,65 @@
 #include <iostream>
-#include <algorithm>
 #include <vector>
-#include <string>
-#include <functional>
- 
+
 using namespace std;
-using i64 = long long;
+
+struct Node
+{
+    int front;
+    int here;
+    int back;
+};
 
 int main() {
     int n, m;
-    scanf("%d%c", &n, &m);
-    vector<int> change(n+1);
+    scanf("%d %d", &n, &m);
+    vector <Node> a(n+1);
+    
     vector<int> max(n+1);
     vector<int> min(n+1);
     
     for(int i = 1; i <= n; i++){
-        change[i] = i;
+        a[i].front = i-1;
+        a[i].here = i;
+        a[i].back = i+1;
+        
         max[i] = i;
         min[i] = i;
     }
     
+    
+    
     for(int i = 0; i < m; i++){
-        int input;
-        scanf("%d", &input);
+        int h;
+        scanf("%d", &h);
         
-        if(change[input] == 1)
+        if(a[h].here == 1)
             continue;
         
-        change[input]--;
+        int f = a[h].front;
         
-        int j;
-        for(j = 1; j <= n; j++){
-            if(change[j] == change[input]){
-                change[j]++;
-            }
-        }
+        a[h].here--;
+        a[f].here++;
         
-        if(change[input] < min[input])
-            min[input] = change[input];
-        if(change[j] > max[j])
-            max[j] = change[j];
+        a[a[h].back].front = f;
+        a[a[f].front].back = h;
+        
+        a[f].back = a[h].back;
+        a[h].front = a[f].front;
+        
+        a[f].front = h;
+        a[h].back = f;
+        
+        if(a[h].here < min[h])
+            min[h] = a[h].here;
+        if(a[f].here > max[f])
+            max[f] = a[f].here;
     }
     
     for(int i = 1; i <= n; i++){
-        printf("%d %d\n", min[i], max[i]);
+        cout << min[i] << " " << max[i] << endl;
     }
+    
     
     return 0;
 }
