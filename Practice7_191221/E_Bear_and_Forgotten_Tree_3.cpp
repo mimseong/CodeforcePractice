@@ -6,14 +6,20 @@ int main() {
     int n, d, h;
     scanf("%d %d %d", &n, &d, &h);
     
-    
-    
     if(d > 2*h){
         printf("-1");
         return 0;
     }
+    if(d == 1 && h == 1 && n != 2){
+        printf("-1");
+        return 0;
+    }
     
+    bool isSame = false;
     int count = 2;
+    
+    if(d == h)
+        isSame = true;
     
     for(int i = 0; i < h; i++){
         printf("%d %d\n", count -1, count);
@@ -31,7 +37,10 @@ int main() {
     int max = count;
     
     for(int i = 0; i <= n-max; i++){
-        printf("1 %d\n", count);
+        if(isSame)
+            printf("2 %d\n", count);
+        else
+            printf("1 %d\n", count);
         count++;
     }
     
