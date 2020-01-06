@@ -12,11 +12,7 @@ int main() {
     int n;
     scanf("%d", &n);
  
-    int count = 1;
-    for(int i = 1; i < n; i++){
-        count += i*4;
-    }
-    printf("%d", count);
+    printf("%d", n*n + (n-1)*(n-1));
     
     return 0;
 }
