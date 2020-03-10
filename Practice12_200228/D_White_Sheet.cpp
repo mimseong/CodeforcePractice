@@ -4,38 +4,72 @@
 #include <algorithm>
 using namespace std;
 
+class Mapping
+{
+public :
+    void init(const vector<int>& raw, int base = 0)
+    {
+        start = base;
+        arr = raw;
+        sort(arr.begin(), arr.end());
+        arr.erase(unique(arr.begin(), arr.end()), arr.end());
+    }
+
+    int get_idx(int k)
+    {
+        return start + (lower_bound(all(arr), k) - arr.begin());
+    }
+
+    int get_value(int idx)
+    {
+        return arr[idx - start];
+    }
+
+    int size()
+    {
+        return arr.size();
+    }
+
+private:
+    int start;
+    vector<int> arr;
+};
+
+int color[6][6];
+
 int main()
 {
-    vector<int> x(7);
-    vector<int> y(7);
+    vector<int> x(6), y(6);
 
-    for (int i = 1; i < 7; i++)
-    	scanf("%d %d", &x[i], &y[i]);
-    if (x[3] <= x[1] && y[3] <= y[1] && x[2] <= x[4] && y[2] <= y[4])
+    for (int i = 0; i < 6; i++)
+        scanf("%d %d", &x[i], &y[i]);
+
+    Mapping xmap, ymap;
+    xmap.init(x);
+    ymap.init(y);
+
+    for (int i = 0; i < 6; i++)
     {
-    	printf("NO");
-    	return (0);
+        x[i] = xmap.get_idx(x[i]);
+        y[i] = ymap.get_idx(y[i]);
     }
-    if (y[3] <= y[1] && y[2] <= y[4])
+
+    for (int i = 2; i < 6; i += 2)
+        for (int sx = x[i]; sx < x[i + 1]; sx++)
+            for (int sy = y[i]; sy < y[i + 1]; sy++)
+                color[sx][sy] = 1;
+
+    for (int sx = x[0]; sx < x[1]; sx++)
     {
-    	if (x[1] < x[4])
-    		x[1] = x[4];
-    	else if (x[3] < x[2])
-    		x[2] = x[3];
+        for (int sy = y[0]; sy < y[1]; sy++)
+        {
+            if (color[sx][sy] == 0)
+            {
+                printf("YES");
+                return 0;
+            }
+        }
     }
-    else if (x[3] <= x[1] && x[2] <= x[4])
-    {
-    	if (y[3] < y[2])
-    		y[2] = y[3];
-    	else if (y[1] < y[4])
-    		y[1] = y[4];
-    	printf("%d %d %d %d\n", x[1], y[1], x[2], y[2]);
-    }
-    if (x[5] <= x[1] && y[5] <= y[1] && x[2] <= x[6] && y[2] <= y[6])
-    {
-    	printf("NO");
-    	return (0);
-    }    
-    printf("YES");
+    printf("NO");
     return (0);
 }
