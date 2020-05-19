@@ -1,41 +1,63 @@
-#include <iostream>
-#include <algorithm>
+#include <stdio.h>
 #include <vector>
-#include <string>
-#include <functional>
-#include <string>
 #include <queue>
-#include <stack>
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <bitset>
+#include <map>
 #include <set>
+#include <tuple>
+#include <string.h>
+#include <math.h>
+#include <random>
+#include <functional>
+#include <assert.h>
+#include <math.h>
+#include <fstream>
+#define all(x) (x).begin(), (x).end()
+#define xx first
+#define yy second
+#define MOD ((int)(1e9 + 9))
  
 using namespace std;
-using i64 = long long;
-using ii = pair<int, int>;
  
-int main() {
+template<typename T, typename Pr = less<T>>
+using pq = priority_queue<T, vector<T>, Pr>;
+using i64 = long long int;
+using ii = pair<int, int>;
+using ii64 = pair<i64, i64>;
+ 
+ 
+int main()
+{
     int n;
     scanf("%d", &n);
-    
-    vector <int>v(101);
-    v[1] = 1;
-    v[2] = 2;
-    v[3] = 4;
-    
-    int sum = 4;
-    for (int i = 4; i <= 100; i += 2)
+ 
+    vector<int> layer;
+ 
+    for (int l = 0; l < n; l++)
     {
-        v[i] = v[i-2] + sum;
-        sum += 2;
+        for (int r = 1; r <= n - l; r++)
+        {
+            bool ok = false;
+ 
+            for (auto& ri : layer)
+            {
+                if (l >= ri)
+                {
+                    ri += r;
+                    ok = true;
+                    break;
+                }
+            }
+ 
+            if (!ok)
+                layer.push_back(l + r);
+        }
     }
-    sum = 5;
-    for (int i = 5; i <= 100; i += 2)
-    {
-        v[i] = v[i-2] + sum;
-        sum += 2;
-    }
-    
-    cout << v[n];
-    
-    
+ 
+    printf("%d\n", layer.size());
+ 
     return 0;
 }
