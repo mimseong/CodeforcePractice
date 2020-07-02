@@ -1,59 +1,66 @@
-#include <iostream>
-#include <algorithm>
+#include <stdio.h>
 #include <vector>
-#include <string>
-#include <functional>
-#include <string>
 #include <queue>
-#include <stack>
-#include <set>
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <bitset>
 #include <map>
+#include <set>
+#include <tuple>
+#include <string.h>
+#include <math.h>
+#include <random>
+#include <functional>
+#include <assert.h>
+#include <math.h>
+#define all(x) (x).begin(), (x).end()
 #define xx first
 #define yy second
- 
+#define MOD ((i64)1e10)
+
 using namespace std;
-using i64 = long long;
+
+template<typename T, typename Pr = less<T>>
+using pq = priority_queue<T, vector<T>, Pr>;
+using i64 = long long int;
 using ii = pair<int, int>;
 using ii64 = pair<i64, i64>;
- 
+
 int main()
 {
     int n;
     scanf("%d", &n);
-    
-    vector<i64> v(n);
-    i64 all = 0;
-    for (int i = 0; i < n; i++)
-    {
-        scanf("%lld", &v[i]);
-        all |= v[i];
-    }
- 
-    vector<i64> left(n, 0);
-    for (int i = 1; i < n; i++)
-        left[i] = left[i-1] | v[i-1];
 
-    vector<i64> right(n, 0);
-    for (int i = n-1; i > 0; i--)
-        right[i-1] = right[i] | v[i];
- 
-    int max_idx = 0;
-    i64 max = all - (left[0] | right[0]);
-    for (int i = 1; i < n; i++)
+    vector<int> arr(n+2);
+
+    for (int i = 1; i <= n; i++)
+        scanf("%d", &arr[i]);
+    
+    vector<int> fromL(n+2), fromR(n+2);
+
+    for (int i = 1; i <= n; i++)
+        fromL[i] = fromL[i-1] | arr[i];
+
+    for (int i = n; i >= 1; i--)
+        fromR[i] = fromR[i+1] | arr[i];
+
+    int total = fromL[n];
+    int maxIdx = 1;
+
+    for (int i = 2; i <= n; i++)
     {
-        if (all - (left[i] | right[i]) > max)
-        {
-            max = all - (left[i] | right[i]);
-            max_idx = i;
-        }
+        int maxv = total - (from[maxIdx -1] | fromR[maxIdx + 1]);
+        int now = total - (fromL[i-1] | fromR[i+1]);
+
+        if (now > maxv)
+            maxIdx = i;
     }
 
-    printf("%d ", v[max_idx]);
-    for (int i = 0; i < n; i++)
-    {
-        if (i != max_idx)
-            printf("%d ", v[i]);
-    }
-    
+    swap(arr[maxIdx], arr[1]);
+
+    for (int i = 1; i <= n; i++)
+        printf("%d ", arr[i]);
+
     return 0;
 }
