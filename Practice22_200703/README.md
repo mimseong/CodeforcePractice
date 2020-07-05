@@ -246,6 +246,38 @@ int main() {
 }
 ```
 
+</details>
+
+## D. Uniqueness
+
+![image](https://user-images.githubusercontent.com/50068946/86528934-a13be000-bee7-11ea-8e55-9480def49ae5.png)
+
+문제 이해는 했는데 어떻게 풀지 몰라서 못 푼 문제였다. 나름 구간이 있어서 투포인터랑 부분합이 떠올랐고 또 구간의 최소 길이를 구하는 문제니깐 파라매트릭 서치도 생각 났는데 전부 활용하기 어려웠다. 투포인터는 l, r 한 번씩 훑는다고 최소 길이를 찾기 어려웠고 부분합은 여기 쓰는 건 아닌 듯하다. 파라매트릭 서치는 답이 있는 구간이 정확히 두 개의 구간으로 나눠지지 않아서 쓰기 어렵다. 
+
+ 
+이 문제의 힌트는 n이 작다! n이 2000 이하의 값이라 n^2까지 계산이 가능하다. 또 이걸 구간의 최소를 구하는 건 구간 외의 길이가 최대가 되면 된다. 그래서 구간 밖의 오른쪽과 왼쪽이 중복되지 않는 최대의 길이를 구해보자. 
+
+![image](https://user-images.githubusercontent.com/50068946/86529022-33dc7f00-bee8-11ea-9d32-c9feeaea714f.png)
+
+갑자기 손코딩이 해보고 싶었음
+
+메모리 얼마나 쓰는지도 배웠다. 배열 크기에 자료형 크기 곱하고 백만 나눠주면 몇 MB 쓰는지 알 수 있다. 256을 넘기지 말도록 하자.
+
+
+<details>
+    <summary>코드 보기</summary>
+
+[내 코드](https://github.com/mimseong/CodeforcePractice/blob/master/Practice22_200703/D_Uniqueness.cpp)
+
+
+북님 코드
+
+```
+
+
+```
+
+
 
 </details>
 
