@@ -257,11 +257,7 @@ int main() {
  
 이 문제의 힌트는 n이 작다! n이 2000 이하의 값이라 n^2까지 계산이 가능하다. 또 이걸 구간의 최소를 구하는 건 구간 외의 길이가 최대가 되면 된다. 그래서 구간 밖의 오른쪽과 왼쪽이 중복되지 않는 최대의 길이를 구해보자. 
 
-![image](https://user-images.githubusercontent.com/50068946/86529022-33dc7f00-bee8-11ea-9d32-c9feeaea714f.png)
 
-갑자기 손코딩이 해보고 싶었음
-
-메모리 얼마나 쓰는지도 배웠다. 배열 크기에 자료형 크기 곱하고 백만 나눠주면 몇 MB 쓰는지 알 수 있다. 256을 넘기지 말도록 하자.
 
 
 <details>
@@ -269,14 +265,164 @@ int main() {
 
 [내 코드](https://github.com/mimseong/CodeforcePractice/blob/master/Practice22_200703/D_Uniqueness.cpp)
 
+![image](https://user-images.githubusercontent.com/50068946/86529022-33dc7f00-bee8-11ea-9d32-c9feeaea714f.png)
 
-북님 코드
+갑자기 손코딩이 해보고 싶었음
 
+메모리 얼마나 쓰는지도 배웠다. 배열 크기에 자료형 크기 곱하고 백만 나눠주면 몇 MB 쓰는지 알 수 있다. 256을 넘기지 말도록 하자.
+
+![image](https://user-images.githubusercontent.com/50068946/86544739-7ba0ec00-bf64-11ea-8532-0138f0395baa.png)
+
+이 문제 한 번 틀렸었다.. 아무리 찾아도 왜 틀린지 몰라서 해맸는데 알고보니 map에 대한 이해가 부족해서 생긴 문제였다 (!) 처음에 len의 길이를 구할 때 int len = calcL.size(); map의 크기를 길이로 뒀었다. 그런데! map에 값을 따로 넣지 않아도! if (calcR[v[i]] > 1 || calcL[v[i]] > 1) 이렇게 조건을 확인 하면 map에 값이 들어간다. 이것 때문에 계속 찾았는데 너무 허무하다. int len = i;로 두니 통과했다. 
+
+### 좌표압축으로 구현하기
+
+위 코드로 구현하면 시간 복잡도는 O(N^2logN)이다. 왼쪽에서 확인하는 부분이 N이고 오른쪽으로 확인하는 부분이 N이고 map을 사용해 좌표를 찾는 부분이 logN이다. 여기서 좌표압축을 사용하면 map의 시간복잡도를 줄일 수 있다.
+
+```
+int main()
+{
+    int n;
+    scanf("%d", &n);
+    
+    vector<int> arr(n);
+    
+    for (int i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+        
+    vector<int> sorted = arr;
+    sort(all(sorted));
+    sorted.erase(unique(all(sorted)), sorted.end());
+    
+    for (int i = 0; i < n; i++)
+        arr[i] = lower_bound(all(sorted), arr[i]) - sorted.begin();
+    
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    
+    return 0;
+}
 ```
 
 
+![image](https://user-images.githubusercontent.com/50068946/86545437-e0127a00-bf69-11ea-9640-00bd1c5d4cf9.png)
+
+```
+5
+200 1 20 20 50
 ```
 
+값을 넣으면 아래와 같이 좌표 압축이 된다. 
+
+```
+3 0 1 1 2 
+```
+
+클래스로 만들면 아래와 같다. 좌표압축 쓸 경우 클래스를 활용하자. 
+
+![image](https://user-images.githubusercontent.com/50068946/86545731-b6f2e900-bf6b-11ea-9376-e2422b872944.png)
+
+
+map 대신 좌표압축을 사용해서 구현해보았다.
+
+```
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <functional>
+#include <string>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#define xx first
+#define yy second
+#define all(x) (x).begin(), (x).end()
+#define MAX 1e9
+ 
+using namespace std;
+using i64 = long long;
+using ii = pair<int, int>;
+using ii64 = pair<i64, i64>;
+
+class Mapping
+{
+  public:
+    void init(const vector<i64>& raw, int base = 0)
+    {
+        start = base;
+        arr = raw;
+        sort(arr.begin(), arr.end());
+        arr.erase(unique(arr.begin(), arr.end()), arr.end());
+    }
+
+    int get_idx(int k)
+    {
+        return start + lower_bound(all(arr), k) - arr.begin();
+    }
+
+    int get_value(int idx)
+    {
+        return arr[idx - start];
+    }
+
+    int size()
+    {
+        return arr.size();
+    }
+
+  private:
+    int start;
+    vector<i64> arr;
+};
+
+int main() {
+    int n;
+    scanf("%d", &n);
+    
+    vector<i64> v(n);
+    for (int i = 0; i < n; i++)
+        scanf("%lld", &v[i]);
+    
+    Mapping m;
+    m.init(v);
+
+    for (int i = 0; i < n; i++)
+        v[i] = m.get_idx(v[i]);
+
+    vector<int> calcL(n, 0);
+    int minL = n;
+    
+    for (int i = 0; i < n; i++)
+    {
+        vector<int> calcR(n, 0);
+        int len = i;
+        
+        for (int j = n-1; j >= i; j--)
+        {
+            calcR[v[j]]++;
+            
+            if (calcR[v[j]] > 1 || calcL[v[j]] >= 1)
+                break;
+
+            len++;
+        }
+        
+        if (n-len < minL)
+            minL = n-len;
+ 
+        calcL[v[i]]++;
+        
+        if (calcL[v[i]] > 1)
+            break;
+    }
+    
+    printf("%d\n", minL);
+    
+    return 0;
+}
+```
 
 
 </details>
