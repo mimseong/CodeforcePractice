@@ -182,6 +182,100 @@ if (max(a[j].xx, (c[k].xx + i)) <= min(a[j].yy, (c[k].yy + i)))
 }
 ```
 
+</details>
+
+
+## C. Alice, Bob, Two Teams
+
+![image](https://user-images.githubusercontent.com/50068946/86528406-65524c00-bee2-11ea-852a-453e949788b4.png)
+
+구해야 하는 값이 연속적으로 있어서 구간합이나 투포인터가 떠오르긴 했는데 구간합은 시작과 끝을 정하는 부분이 많아서 패스하고 투포인터는 l, r이 움직이는 기준을 잡기 어려워서 포기했다. 시간 촉박한 와중에 투포인터 ppt도 봤는데 거기서도 투포인터는 주로 구간의 길이를 구한다고 했고 최댓값을 구하는 데 적합하지 않아서 패스했음.
+
+
+이 문제도 내가 잘못 이해했다. 여기서 prefix랑 suffix란 용어가 나왔는데 이걸 찾아보니 접두사 접미사였다. 그래서 구간을 선택하면 그 구간의 처음과 끝을 바꾸는 건가 싶었는데 예시를 보니 아니었다. 도저히 어떤 값인지 알 수 없어서 패스하고 풀기 시작했는데 알고보니 prefix가 문자열의 처음부터 특정 위치까지의 문자열을 뜻하는 것 같았다. suffix는 반대로 특정 위치에서 맨 끝까지의 문자열이다. 이러면 이제 부분합 쓸 수 있겠다. 미리 점수 합 구한 다음 최댓값은 처음부터 끝까지 훑으면서 찾으면 되겠다.
+
+![image](https://user-images.githubusercontent.com/50068946/86528466-03461680-bee3-11ea-83b8-5418fa906170.png)
+
+점수의 변화량을 담는 배열을 만들어두고 그 변화량 중 가장 큰 값을 저장한다. 가장 큰 변화량과 기존의 값을 더한 값과 기존의 값 두 개를 비교해서 (변하지 않았을 때 값이 더 클 수 있으므로) 큰 값을 출력하면 된다. 
+
+**코드**
+
+<details>
+    <summary>코드 보기</summary>
+
+[내 코드](https://github.com/mimseong/CodeforcePractice/blob/master/Practice22_200703/C_Alice_Bob_Two_Teams.cpp)
+
+북님 코드
+
+![image](https://user-images.githubusercontent.com/50068946/86528793-608f9700-bee6-11ea-8cfd-fdfea4262dca.png)
+
+나는 값의 변화량을 저장했는데 a, b값을 따로 저장했다. 뒤집는 걸 a 점수의 합이라 생각할 수 있구나. 신기하다.
+
+```
+int main() {
+    int n;
+    scanf("%d", &n);
+    
+    vector<i64> a(n+1);
+    vector<i64> b(n+1);
+
+    vector<int> p(n+1);
+    for(int i = 1; i <= n; i++)
+        scanf("%d", &p[i]);
+
+    string s;
+    cin >> s;
+    for (int i = 0; i < n; i++)
+    {
+        a[i+1] = a[i];
+        b[i+1] = b[i];
+
+        if (s[i] == 'A')
+            a[i+1] += p[i+1];
+        else
+            b[i+1] += p[i+1];
+    }
+
+    i64 ans = b[n];
+
+    for (int i = 1; i <= n; i++)
+        ans = max({ans, a[i] + b[n] - b[i], b[i] + a[n] - a[i]});
+    
+    printf("%lld\n", ans);
+    return 0;
+}
+```
+
+</details>
+
+## D. Uniqueness
+
+![image](https://user-images.githubusercontent.com/50068946/86528934-a13be000-bee7-11ea-8e55-9480def49ae5.png)
+
+문제 이해는 했는데 어떻게 풀지 몰라서 못 푼 문제였다. 나름 구간이 있어서 투포인터랑 부분합이 떠올랐고 또 구간의 최소 길이를 구하는 문제니깐 파라매트릭 서치도 생각 났는데 전부 활용하기 어려웠다. 투포인터는 l, r 한 번씩 훑는다고 최소 길이를 찾기 어려웠고 부분합은 여기 쓰는 건 아닌 듯하다. 파라매트릭 서치는 답이 있는 구간이 정확히 두 개의 구간으로 나눠지지 않아서 쓰기 어렵다. 
+
+ 
+이 문제의 힌트는 n이 작다! n이 2000 이하의 값이라 n^2까지 계산이 가능하다. 또 이걸 구간의 최소를 구하는 건 구간 외의 길이가 최대가 되면 된다. 그래서 구간 밖의 오른쪽과 왼쪽이 중복되지 않는 최대의 길이를 구해보자. 
+
+![image](https://user-images.githubusercontent.com/50068946/86529022-33dc7f00-bee8-11ea-9d32-c9feeaea714f.png)
+
+갑자기 손코딩이 해보고 싶었음
+
+메모리 얼마나 쓰는지도 배웠다. 배열 크기에 자료형 크기 곱하고 백만 나눠주면 몇 MB 쓰는지 알 수 있다. 256을 넘기지 말도록 하자.
+
+
+<details>
+    <summary>코드 보기</summary>
+
+[내 코드](https://github.com/mimseong/CodeforcePractice/blob/master/Practice22_200703/D_Uniqueness.cpp)
+
+
+북님 코드
+
+```
+
+
+```
 
 
 
