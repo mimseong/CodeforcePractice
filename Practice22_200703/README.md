@@ -435,7 +435,65 @@ int main() {
 운영체제 스케줄링이 먼저 생각났지만 그리디 문제였다. 그리디는 왜이리 어렵지? 다른 기법들에 비해 많이 안 접해봐서 너무 낯설고 증명도 어렵다. 처음에는 먼저 도착한 순으로 처리를 하되, 시간이 많이 걸리지 않는 것부터 처리하려 했다. 하지만 9-25, 10-11, 12-13 같은 경우에 9-25를 먼저 처리하게 되면 하나 밖에 수행하지 못한다. 이 경우에는 끝나는 시점 순서대로 순서를 세면 해결할 수 있다. 
 
 
+<details>
+    <summary>코드 보기</summary>
+
+[내 코드](https://github.com/mimseong/CodeforcePractice/blob/master/Practice22_200703/E_Restaurant.cpp)
+
+```
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <functional>
+#include <string>
+#include <queue>
+#include <stack>
+#include <set>
+#include <map>
+#define xx first
+#define yy second
+#define MAX 1e9
+#define all(x) (x).begin(), (x).end()
+ 
+using namespace std;
+using i64 = long long;
+using ii = pair<int, int>;
+using ii64 = pair<i64, i64>;
+
+bool sortbysecond(const pair<int, int> &a, const pair<int, int> &b)
+{
+    return (a.second < b.second);
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+    
+    vector<ii> v(n);
+    for (int i = 0; i < n; i++)
+        scanf("%d %d", &v[i].first, &v[i].second);
+
+    sort(all(v), sortbysecond);
+
+    int end = v[0].yy;
+    int ans = 1;
+    for (int i = 1; i < n; i++)
+    {
+        if (v[i].xx > end)
+        {
+            end = v[i].yy;
+            ans++;
+        }
+    }
+    
+    printf("%d\n", ans);
+    return 0;
+}
+```
 
 
+
+</details>
 
 
